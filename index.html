@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Алина & Тимофей — приглашение на свадьбу</title>
+  <meta name="description" content="Приглашение на свадьбу Алины и Тимофея" />
+
+  <link rel="icon" type="image/svg+xml" href="images/favicon.svg" />
+  <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32.png" />
+  <link rel="apple-touch-icon" href="images/apple-touch-icon.png" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=Montserrat:wght@300;400;500&display=swap"
+    rel="stylesheet"
+  />
+  <!-- Marck Script подгружается только для символа "&" (обложка и футер) -->
+  <link
+    href="https://fonts.googleapis.com/css2?family=Marck+Script&text=%26&display=swap"
+    rel="stylesheet"
+  />
+  <!-- Imperial Script — рукописные заголовки секций (только латиница) -->
+  <link
+    href="https://fonts.googleapis.com/css2?family=Imperial+Script&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <!-- Загрузочный экран: скрывается в js/script.js после полной загрузки -->
+  <div class="loader" id="loader" aria-hidden="true">
+    <p class="loader__monogram">А <span class="loader__amp">&amp;</span> Т</p>
+    <svg class="loader__rings" viewBox="0 0 170 120">
+      <path class="loader__ring" style="--i: 0" pathLength="1"
+            d="M22 64 A42 42 0 1 1 106 64 A42 42 0 1 1 22 64" />
+      <path class="loader__ring" style="--i: 1" pathLength="1"
+            d="M64 64 A42 42 0 1 1 148 64 A42 42 0 1 1 64 64" />
+      <path class="loader__spark"
+            d="M85 4 C86 11 89 13 95 14 C89 15 86 17 85 24 C84 17 81 15 75 14 C81 13 84 11 85 4 Z" />
+    </svg>
+  </div>
+
+  <!-- Навигация -->
+  <nav class="nav" id="nav">
+    <a href="#hero" class="nav__logo">А&nbsp;&amp;&nbsp;Т</a>
+    <button class="nav__burger" id="navBurger" aria-label="Меню">
+      <span></span><span></span><span></span>
+    </button>
+    <ul class="nav__links" id="navLinks">
+      <li><a href="#invite">Приглашение</a></li>
+      <li><a href="#program">Программа</a></li>
+      <li><a href="#place">Место</a></li>
+      <li><a href="#dresscode">Дресс-код</a></li>
+      <li><a href="#rsvp">Ответ</a></li>
+      <li><a href="#ours">Фото</a></li>
+      <li><a href="#contacts">Контакты</a></li>
+    </ul>
+  </nav>
+
+  <!-- Обложка -->
+  <header class="hero" id="hero">
+    <div class="hero__silk" aria-hidden="true">
+      <div class="silk silk--1"></div>
+      <div class="silk silk--2"></div>
+      <div class="silk silk--3"></div>
+      <div class="silk silk--4"></div>
+    </div>
+    <div class="hero__content">
+      <p class="hero__pre reveal">Приглашаем вас на нашу свадьбу</p>
+      <h1 class="hero__names reveal">
+        <span id="brideName">Алина</span>
+        <span class="hero__amp">&amp;</span>
+        <span id="groomName">Тимофей</span>
+      </h1>
+      <!-- Фото с рукописной надписью, наезжающей на верхний край -->
+      <div class="hero__photo reveal">
+        <img src="images/couple.jpg" alt="Алина и Тимофей" />
+        <span class="hero__script" aria-hidden="true">Our wedding!</span>
+      </div>
+      <div class="hero__divider reveal" aria-hidden="true">
+        <span></span><i>♥</i><span></span>
+      </div>
+      <p class="hero__date reveal" id="heroDate">19 сентября 2026</p>
+    </div>
+    <a href="#invite" class="hero__scroll" aria-label="Листайте вниз">
+      <span class="hero__mouse"></span>
+    </a>
+  </header>
+
+  <main>
+    <!-- Приглашение -->
+    <section class="section section--brown invite" id="invite">
+      <span class="blob blob--glow blob--br" aria-hidden="true"></span>
+      <svg class="deco deco--rings deco--tr" viewBox="0 0 170 120" aria-hidden="true">
+        <path class="deco__line" pathLength="1" style="--i: 0"
+              d="M22 64 A42 42 0 1 1 106 64 A42 42 0 1 1 22 64" />
+        <path class="deco__line" pathLength="1" style="--i: 1"
+              d="M64 64 A42 42 0 1 1 148 64 A42 42 0 1 1 64 64" />
+        <path class="deco__fill deco__spark"
+              d="M85 4 C86 11 89 13 95 14 C89 15 86 17 85 24 C84 17 81 15 75 14 C81 13 84 11 85 4 Z" />
+      </svg>
+      <p class="section__eyebrow reveal">Дорогие гости</p>
+      <h2 class="section__title section__title--script reveal">We say Yes!</h2>
+      <p class="invite__text reveal">
+        В нашей жизни скоро произойдёт очень важное событие —
+        мы станем семьёй! И мы хотим разделить радость этого дня
+        с самыми близкими и дорогими людьми.
+      </p>
+      <p class="invite__text reveal">
+        Будем счастливы видеть вас
+        <strong id="inviteDate">19 сентября 2026</strong> на нашем празднике.
+      </p>
+
+      <!-- Обратный отсчёт -->
+      <div class="countdown reveal" id="countdown">
+        <p class="countdown__label">До торжества осталось</p>
+        <div class="countdown__grid">
+          <div class="countdown__item">
+            <span class="countdown__num" id="cdDays">—</span>
+            <span class="countdown__cap" id="cdDaysCap">дней</span>
+          </div>
+          <div class="countdown__item">
+            <span class="countdown__num" id="cdHours">—</span>
+            <span class="countdown__cap" id="cdHoursCap">часов</span>
+          </div>
+          <div class="countdown__item">
+            <span class="countdown__num" id="cdMins">—</span>
+            <span class="countdown__cap" id="cdMinsCap">минут</span>
+          </div>
+          <div class="countdown__item">
+            <span class="countdown__num" id="cdSecs">—</span>
+            <span class="countdown__cap" id="cdSecsCap">секунд</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Программа -->
+    <section class="section section--tinted" id="program">
+      <span class="blob blob--sky blob--tr" aria-hidden="true"></span>
+      <span class="blob blob--sand blob--bl" aria-hidden="true"></span>
+      <p class="section__eyebrow reveal">Программа дня</p>
+      <h2 class="section__title section__title--script reveal">The Program</h2>
+      <div class="timeline" id="timeline">
+        <!-- пункты программы рендерятся из js/config.js -->
+      </div>
+    </section>
+
+      <!-- Место -->
+    <section class="section" id="place">
+      <p class="section__eyebrow reveal">Где нас найти</p>
+      <h2 class="section__title section__title--script reveal">The Place</h2>
+      <p class="section__text reveal">
+        Праздник пройдёт в уютной усадьбе за городом —
+        белая веранда, зелёная лужайка и банкетный зал.
+      </p>
+
+      <!-- Бегущая галерея (фото рендерятся из js/config.js) -->
+      <div class="gallery reveal" id="gallery">
+        <div class="gallery__track" id="galleryTrack"></div>
+      </div>
+
+      <div class="place__card reveal">
+        <p class="place__name" id="venueName">Усадьба Light Home</p>
+        <p class="place__address" id="venueAddress">Адрес</p>
+        <p class="place__time">Сбор гостей — <strong>15:20</strong></p>
+        <div class="place__buttons">
+          <a class="btn" id="venueMapLink" href="#" target="_blank" rel="noopener">
+            Построить маршрут
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Дресс-код -->
+    <section class="section section--tinted" id="dresscode">
+      <span class="blob blob--sky blob--br" aria-hidden="true"></span>
+      <span class="blob blob--sand blob--tl" aria-hidden="true"></span>
+      <p class="section__eyebrow reveal">Что надеть</p>
+      <h2 class="section__title section__title--script reveal">Dress code</h2>
+      <p class="section__text reveal">
+        Мы будем очень рады, если вы поддержите палитру нашего торжества —
+        оттенки синего, голубого, шоколадного и бежевого.
+      </p>
+      <div class="palette reveal" id="palette">
+        <!-- кружки палитры рендерятся из js/config.js -->
+      </div>
+    </section>
+
+    <!-- О подарках -->
+    <section class="section section--brown" id="gifts">
+      <span class="blob blob--glow blob--tl" aria-hidden="true"></span>
+      <svg class="deco deco--envelope deco--bl deco--tilt-l" viewBox="0 0 170 120" aria-hidden="true">
+        <path class="deco__line" pathLength="1" style="--i: 0"
+              d="M24 18 H146 Q155 18 155 27 V95 Q155 104 146 104 H24 Q15 104 15 95 V27 Q15 18 24 18 Z" />
+        <path class="deco__line" pathLength="1" style="--i: 1"
+              d="M19 24 L85 72 L151 24" />
+        <path class="deco__fill deco__heart"
+              d="M85 90 C81 84 72 83 72 77 C72 72 78 70 83 74 L85 76 L87 74 C92 70 98 72 98 77 C98 83 89 84 85 90 Z" />
+      </svg>
+      <p class="section__eyebrow reveal">Пожелания</p>
+      <h2 class="section__title section__title--script reveal">The Gifts</h2>
+      <p class="section__text reveal">
+        Самый главный подарок для нас — это ваше присутствие
+        и ваши улыбки. А если вам хочется порадовать нас чем-то ещё,
+        мы будем очень благодарны вкладу в нашу общую мечту —
+        свадебное путешествие.
+      </p>
+      <!-- фраза «пишется от руки»: буквы оборачиваются в спаны в js/script.js -->
+      <p class="section__text gifts__hint">
+        Поэтому конверт порадует нас больше, чем самая красивая
+        коробка с бантом
+      </p>
+    </section>
+
+    <!-- Анкета: ответы в фоне отправляются в гугл-форму (см. js/config.js) -->
+    <section class="section section--tinted rsvp" id="rsvp">
+      <span class="blob blob--sand blob--tr" aria-hidden="true"></span>
+      <span class="blob blob--sky blob--bl" aria-hidden="true"></span>
+      <svg class="deco deco--flourish deco--br" viewBox="0 0 220 80" aria-hidden="true">
+        <path class="deco__line" pathLength="1" style="--i: 0"
+              d="M8 62 C48 76 78 70 92 52 C101 39 94 27 82 31 C71 35 73 52 89 56 C122 64 160 46 212 14" />
+        <circle class="deco__fill" cx="212" cy="14" r="2.5" />
+      </svg>
+      <p class="section__eyebrow reveal">Пара вопросов</p>
+      <h2 class="section__title section__title--script reveal">Your answer</h2>
+      <p class="section__text reveal">
+        Пожалуйста, ответьте до <strong id="rsvpDeadline">1 сентября</strong> —
+        так мы сможем всё подготовить и учесть ваши пожелания.
+      </p>
+      <form class="rsvp__form reveal" id="rsvpForm">
+        <label class="rsvp__label" for="rsvpName">Имя и фамилия</label>
+        <input
+          class="rsvp__input"
+          id="rsvpName"
+          name="name"
+          type="text"
+          placeholder="Иван Иванов"
+          autocomplete="name"
+          required
+        />
+
+        <p class="rsvp__label" id="rsvpAttendLabel">Сможете ли вы прийти?</p>
+        <div class="rsvp__choices" role="radiogroup" aria-labelledby="rsvpAttendLabel">
+          <label class="rsvp__choice">
+            <input type="radio" name="attend" value="Да" required />
+            <span>Да</span>
+          </label>
+          <label class="rsvp__choice">
+            <input type="radio" name="attend" value="Нет" />
+            <span>Нет</span>
+          </label>
+        </div>
+
+        <!-- скрывается, если гость выбрал «Нет» (initRsvpForm) -->
+        <div class="rsvp__extra" id="rsvpExtra">
+          <label class="rsvp__label" for="rsvpWishes">Пожелания</label>
+          <textarea
+            class="rsvp__input rsvp__textarea"
+            id="rsvpWishes"
+            name="wishes"
+            rows="3"
+            placeholder="Предпочтения в напитках, наличие аллергий на еду — всё, что хотите нам сказать"
+          ></textarea>
+        </div>
+
+        <button class="btn rsvp__submit" type="submit">Отправить ответ</button>
+        <p class="rsvp__status" id="rsvpStatus" role="status"></p>
+      </form>
+
+      <!-- Совместный плейлист: QR ведёт на Spotify (ссылка в js/config.js,
+           сам QR — статичная картинка images/spotify-qr.svg) -->
+      <!-- скрывается, если гость выбрал «Нет» (initRsvpForm) -->
+      <div class="rsvp__music reveal" id="rsvpMusic">
+        <p class="rsvp__music-text">
+          Соберём музыку вечера вместе — добавьте в наш плейлист
+          треки, под которые вам захочется танцевать.
+        </p>
+        <a class="rsvp__qr" id="spotifyLink" href="#" target="_blank" rel="noopener"
+           aria-label="Открыть плейлист в Spotify">
+          <!-- QR — CSS-маска (зашита data-URI в css/style.css), чтобы цвет мог мерцать -->
+          <span class="rsvp__qr-img" aria-hidden="true"></span>
+        </a>
+        <p class="rsvp__music-hint">
+          наведите камеру или просто нажмите на код — и добавьте свой трек
+        </p>
+        <details class="rsvp__music-note">
+          <summary>Инструкция для тех, у кого не активна кнопка добавления в плейлист</summary>
+          <p>
+            Сначала сохраните сам плейлист к себе в медиатеку, затем кликните
+            на три точки у любого понравившегося вам трека и выберите
+            «Добавить в плейлист»
+          </p>
+        </details>
+      </div>
+    </section>
+
+    <!-- Приложение Ours -->
+    <section class="section section--brown ours" id="ours">
+      <span class="blob blob--glow blob--tr" aria-hidden="true"></span>
+      <svg class="deco deco--camera deco--bl deco--tilt-l" viewBox="0 0 170 120" aria-hidden="true">
+        <path class="deco__line" pathLength="1" style="--i: 0"
+              d="M32 32 H138 Q150 32 150 44 V98 Q150 110 138 110 H32 Q20 110 20 98 V44 Q20 32 32 32 Z" />
+        <path class="deco__line" pathLength="1" style="--i: 1"
+              d="M60 32 L67 18 L103 18 L110 32" />
+        <path class="deco__line" pathLength="1" style="--i: 2"
+              d="M62 70 A23 23 0 1 1 108 70 A23 23 0 1 1 62 70" />
+        <path class="deco__line" pathLength="1" style="--i: 3"
+              d="M74 70 A11 11 0 1 1 96 70 A11 11 0 1 1 74 70" />
+        <circle class="deco__fill deco__flash" cx="132" cy="46" r="3.5" />
+      </svg>
+      <p class="section__eyebrow reveal">Сохраним воспоминания</p>
+      <h2 class="section__title section__title--script reveal">Memories</h2>
+      <p class="section__text reveal">
+        Мы хотим увидеть наш день вашими глазами!
+        Скачайте приложение <strong>Ours</strong> — снимайте фото и видео
+        на празднике, и все кадры соберутся в общий свадебный альбом.
+      </p>
+      <div class="ours__buttons reveal">
+        <a class="btn" id="oursAppStore" href="#" target="_blank" rel="noopener">
+           App Store
+        </a>
+        <a class="btn" id="oursGooglePlay" href="#" target="_blank" rel="noopener">
+          ▶ Google Play
+        </a>
+      </div>
+      <p class="ours__note reveal" id="oursNote"></p>
+    </section>
+
+    <!-- Контакты -->
+    <section class="section" id="contacts">
+      <span class="blob blob--sky blob--tr" aria-hidden="true"></span>
+      <span class="blob blob--sand blob--bl" aria-hidden="true"></span>
+      <p class="section__eyebrow reveal">Тссс, это секрет</p>
+      <h2 class="section__title section__title--script reveal">The Organizer</h2>
+      <p class="section__text reveal">
+        Если вы готовите сюрприз, поздравление —
+        свяжитесь с нашим организатором.
+      </p>
+      <div class="contacts" id="contactsList">
+        <!-- карточки контактов рендерятся из js/config.js -->
+      </div>
+    </section>
+  </main>
+
+  <!-- Лайтбокс для фото -->
+  <div class="lightbox" id="lightbox" aria-hidden="true">
+    <img src="" alt="" id="lightboxImg" />
+    <button class="lightbox__close" id="lightboxClose" aria-label="Закрыть">×</button>
+  </div>
+
+  <footer class="footer">
+    <p class="footer__names">Алина <span class="footer__amp">&amp;</span> Тимофей</p>
+    <p class="footer__date" id="footerDate">19.09.2026</p>
+    <p class="footer__note">Ждём вас с любовью <span class="footer__heart">♥</span></p>
+    <p class="footer__credit">Сайт создал Timofey Sidorenko</p>
+  </footer>
+
+  <script src="js/config.js"></script>
+  <script src="js/script.js"></script>
+</body>
+</html>
