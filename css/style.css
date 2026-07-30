@@ -1418,10 +1418,16 @@ body.menu-open { overflow: hidden; }
 .gallery__track {
   display: flex;
   width: max-content;
-  /* translate3d в кадрах анимации сам уводит ленту на видеокарту.
-     will-change тут не ставим: лента шириной в пять экранов висела бы
-     в памяти телефона постоянно, а из-за этого iPhone и выбрасывает
-     из неё картинки, оставляя пустые рамки */
+}
+
+/* Класс вешает js/script.js, когда фото загрузились и лента получила
+   настоящую ширину. Запускать прокрутку раньше нельзя: сдвиг задан в
+   процентах от ширины ленты, и Safari, посчитав его по пустой ленте,
+   больше не пересчитывает — лента ломается до перезагрузки страницы.
+   translate3d в кадрах сам уводит ленту на видеокарту; will-change не
+   ставим — лента шириной в пять экранов висела бы в памяти телефона
+   постоянно, а из-за этого iPhone выбрасывает из неё картинки */
+.gallery__track--run {
   animation: gallery-scroll 45s linear infinite;
 }
 
@@ -1444,7 +1450,7 @@ body.menu-open { overflow: hidden; }
 /* Реакции на наведение — только там, где есть мышь. На телефоне :hover
    «залипает» после тапа: лента вставала намертво до тапа по пустому месту */
 @media (hover: hover) {
-  .gallery:hover .gallery__track { animation-play-state: paused; }
+  .gallery:hover .gallery__track--run { animation-play-state: paused; }
   .gallery__img:hover { transform: scale(1.04) rotate(0.5deg); }
 }
 
@@ -1753,6 +1759,6 @@ body.menu-open { overflow: hidden; }
 
 @media (prefers-reduced-motion: reduce) {
   .reveal { opacity: 1; transform: none; transition: none; }
-  .silk, .gallery__track { animation: none; }
+  .silk, .gallery__track--run { animation: none; }
   html { scroll-behavior: auto; }
 }

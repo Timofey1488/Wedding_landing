@@ -175,6 +175,23 @@ function renderGallery() {
     .join("");
 
   track.innerHTML = imgs;
+
+  // Анимацию включаем только когда фото загрузились и лента получила
+  // свою настоящую ширину. Ширина картинок до загрузки нулевая, а лента
+  // едет на «минус половину себя» — если Safari успевает запустить
+  // прокрутку по ещё пустой ленте, он считает этот сдвиг один раз и
+  // потом не пересчитывает: лента ломается до перезагрузки страницы
+  const photos = [...track.querySelectorAll("img")];
+  const loaded = Promise.all(
+    photos.map((img) => img.decode().catch(() => {}))
+  );
+
+  // если какое-то фото не откроется, лента всё равно поедет
+  const dontWaitForever = new Promise((resolve) => setTimeout(resolve, 4000));
+
+  Promise.race([loaded, dontWaitForever]).then(() =>
+    track.classList.add("gallery__track--run")
+  );
 }
 
 /* ---------- Палитра дресс-кода ---------- */
