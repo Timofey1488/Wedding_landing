@@ -296,12 +296,38 @@ body.menu-open { overflow: hidden; }
 }
 
 /* will-change — просим браузер заранее вынести обложку на отдельный слой,
-   тогда параллакс из js/script.js двигает её без перерисовки */
+   тогда параллакс двигает её без перерисовки */
 .hero__content {
   position: relative;
   z-index: 2;
-  padding: 90px 20px 40px;
+  /* нижний отступ держит место под колесиком прокрутки: оно приклеено
+     к низу обложки, и на невысоких экранах (телефон) вплотную подъезжало
+     к дате. Содержимое выровнено по центру, поэтому запас снизу просто
+     приподнимает его, не оставляя пустоты */
+  padding: 90px 20px 110px;
   will-change: transform, opacity;
+}
+
+/* Параллакс обложки, привязанный прямо к прокрутке.
+   Раньше положение считал JS по событию scroll, но на телефоне страницу
+   двигает отдельный поток браузера, и JS всегда отставал на кадр-другой —
+   обложка ехала рывками. Здесь тем же занимается сам браузер, поэтому
+   обложка и страница идут кадр в кадр.
+   Браузеры без animation-timeline (Safari до 26) сюда не заходят —
+   для них в js/script.js остался прежний расчёт, но только на десктопе */
+@supports (animation-timeline: scroll()) {
+  .hero__content {
+    animation: hero-parallax linear both;
+    /* отсчёт от прокрутки страницы, на длине первого экрана */
+    animation-timeline: scroll(root block);
+    animation-range: 0 100svh;
+  }
+
+  @keyframes hero-parallax {
+    from { transform: translate3d(0, 0, 0); opacity: 1; }
+    90%  { opacity: 0; }
+    to   { transform: translate3d(0, 28svh, 0); opacity: 0; }
+  }
 }
 
 /* Фото с рукописной надписью «Our wedding!» */
