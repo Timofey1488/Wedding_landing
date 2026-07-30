@@ -104,7 +104,7 @@ const WEDDING = {
       text: "",
     },
     {
-      time: "20:00",
+      time: "20:30",
       title: "Завершение вечера",
       text: "",
     },

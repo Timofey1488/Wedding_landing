@@ -948,7 +948,7 @@ body.menu-open { overflow: hidden; }
   font-family: var(--font-serif);
   font-style: italic;
   font-weight: 500;
-  font-size: 1.45rem;
+  font-size: 1.62rem;
   color: var(--blue-accent);
   line-height: 1.2;
   transition: color 0.18s ease;
@@ -975,8 +975,10 @@ body.menu-open { overflow: hidden; }
 }
 
 @media (max-width: 560px) {
-  .timeline__item { gap: 18px; }
-  .timeline__time { flex-basis: 74px; font-size: 1.3rem; }
+  /* на телефоне время и текст держим ближе друг к другу: колонка со
+     временем ровно под «15:20», плюс небольшой зазор */
+  .timeline__item { gap: 12px; }
+  .timeline__time { flex-basis: 64px; font-size: 1.45rem; }
   .timeline__title { font-size: 1.08rem; letter-spacing: 0.1em; }
 }
 
