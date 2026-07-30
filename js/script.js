@@ -21,28 +21,61 @@ document.addEventListener("DOMContentLoaded", () => {
 
 function initHeroHeight() {
   const root = document.documentElement;
+  const vv = window.visualViewport;
 
-  // Обложка меряется от высоты окна. В обычном браузере для этого хватает
-  // единицы svh, но когда страницу открывают внутри приложения (Telegram
-  // и подобные), окно меняет высоту прямо во время прокрутки — и вместе
-  // с ним пересчитываются любые svh/dvh/vh, отчего фото прыгает.
-  // Поэтому снимаем высоту один раз в пикселях и дальше держимся за неё.
-  const measure = () => {
-    const vv = window.visualViewport;
-    const h = Math.round(vv ? vv.height : window.innerHeight);
-    root.style.setProperty("--hero-h", h + "px");
+  // Обложка меряется от высоты окна. В обычном браузере для этого хватило
+  // бы единицы svh, но когда страницу открывают внутри приложения
+  // (Telegram и подобные), окно меняет высоту прямо во время прокрутки —
+  // и вместе с ним пересчитываются любые svh/dvh/vh, отчего фото прыгает.
+  // Поэтому держим высоту в пикселях и сами решаем, когда её менять.
+
+  // Спрашиваем окно тремя способами и берём самый скромный ответ
+  const current = () => {
+    const values = [window.innerHeight, root.clientHeight];
+    if (vv) values.push(vv.height);
+    return Math.round(Math.min(...values.filter((v) => v > 0)));
   };
 
-  measure();
+  let smallest = current();
+  const apply = () => root.style.setProperty("--hero-h", smallest + "px");
 
-  // Пересчитываем только когда меняется ширина, то есть при повороте
-  // экрана. Изменение одной высоты — это как раз то, от чего защищаемся
+  apply();
+
+  // Высоту только уменьшаем. Когда сверху выезжает шапка приложения или
+  // браузера, видимая область становится меньше — обложка должна помещаться
+  // именно в неё, с учётом шапки. Обратно, когда шапка уходит, не растём:
+  // иначе кадр прыгал бы туда-сюда при каждой прокрутке
+  const shrink = () => {
+    // при увеличении пальцами видимая область тоже уменьшается,
+    // но это не повод пересобирать обложку
+    if (vv && vv.scale > 1) return;
+
+    const h = current();
+
+    if (h > 0 && h < smallest - 8) {
+      smallest = h;
+      apply();
+    }
+  };
+
+  window.addEventListener("resize", shrink);
+  if (vv) vv.addEventListener("resize", shrink);
+
+  // Поворот экрана — единственный случай, когда меряем заново с нуля.
+  // Сразу после поворота размеры ещё не устаканились, поэтому с задержкой
   let lastWidth = window.innerWidth;
 
+  const reset = () =>
+    setTimeout(() => {
+      smallest = current();
+      apply();
+    }, 250);
+
+  window.addEventListener("orientationchange", reset);
   window.addEventListener("resize", () => {
     if (window.innerWidth === lastWidth) return;
     lastWidth = window.innerWidth;
-    measure();
+    reset();
   });
 }
 
