@@ -100,11 +100,14 @@ function renderProgram() {
 function renderGallery() {
   const track = document.getElementById("galleryTrack");
 
-  // дублируем набор фото, чтобы лента бежала бесшовно
+  // дублируем набор фото, чтобы лента бежала бесшовно.
+  // loading="lazy" здесь не годится: вторая половина ленты стоит далеко
+  // за правым краем экрана, браузер не считает её нужной и не грузит —
+  // на телефоне в ленте появлялись пустые места
   const imgs = [...WEDDING.gallery, ...WEDDING.gallery]
     .map(
       (src) =>
-        `<img class="gallery__img" src="${src}" alt="Усадьба Light Home" loading="lazy" />`
+        `<img class="gallery__img" src="${src}" alt="Усадьба Light Home" decoding="async" />`
     )
     .join("");
 
@@ -344,16 +347,42 @@ function initParallax() {
   const content = document.querySelector(".hero__content");
   const hero = document.getElementById("hero");
 
-  window.addEventListener(
-    "scroll",
-    () => {
-      const y = window.scrollY;
-      if (y > hero.offsetHeight) return;
-      content.style.transform = `translateY(${y * 0.28}px)`;
-      content.style.opacity = 1 - y / (hero.offsetHeight * 0.9);
-    },
-    { passive: true }
-  );
+  // Кому анимации мешают — обложка просто стоит на месте
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+  // Высоту обложки меряем заранее: если читать её на каждом событии
+  // прокрутки, браузер вынужден пересчитывать раскладку прямо посреди
+  // скролла — на телефоне это и даёт рывки
+  let heroHeight = hero.offsetHeight;
+  let pending = false;
+
+  const update = () => {
+    pending = false;
+
+    const y = window.scrollY;
+    if (y > heroHeight) return;
+
+    // translate3d — чтобы обложку двигала видеокарта, а не перерисовка
+    content.style.transform = `translate3d(0, ${y * 0.28}px, 0)`;
+    content.style.opacity = 1 - y / (heroHeight * 0.9);
+  };
+
+  // На телефоне прокруткой занимается отдельный поток браузера, и события
+  // scroll приходят вразнобой. Поэтому не двигаем обложку на каждом
+  // событии, а откладываем до ближайшего кадра — так шаг всегда ровный
+  const onScroll = () => {
+    if (pending) return;
+    pending = true;
+    requestAnimationFrame(update);
+  };
+
+  window.addEventListener("scroll", onScroll, { passive: true });
+  window.addEventListener("resize", () => {
+    heroHeight = hero.offsetHeight;
+    onScroll();
+  });
+
+  update();
 }
 
 /* ---------- Навигация ---------- */
@@ -363,9 +392,22 @@ function initNav() {
   const burger = document.getElementById("navBurger");
   const links = document.getElementById("navLinks");
 
-  window.addEventListener("scroll", () => {
-    nav.classList.toggle("nav--solid", window.scrollY > 40);
-  });
+  // passive: true — обещаем браузеру, что не отменяем прокрутку,
+  // иначе он ждёт наш обработчик, прежде чем сдвинуть страницу
+  let navPending = false;
+
+  window.addEventListener(
+    "scroll",
+    () => {
+      if (navPending) return;
+      navPending = true;
+      requestAnimationFrame(() => {
+        navPending = false;
+        nav.classList.toggle("nav--solid", window.scrollY > 40);
+      });
+    },
+    { passive: true }
+  );
 
   burger.addEventListener("click", () => {
     burger.classList.toggle("open");

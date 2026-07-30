@@ -295,7 +295,14 @@ body.menu-open { overflow: hidden; }
   66%      { transform: translate(-3%, 4%) scale(0.96); }
 }
 
-.hero__content { position: relative; z-index: 2; padding: 90px 20px 40px; }
+/* will-change — просим браузер заранее вынести обложку на отдельный слой,
+   тогда параллакс из js/script.js двигает её без перерисовки */
+.hero__content {
+  position: relative;
+  z-index: 2;
+  padding: 90px 20px 40px;
+  will-change: transform, opacity;
+}
 
 /* Фото с рукописной надписью «Our wedding!» */
 .hero__photo {
@@ -1319,25 +1326,50 @@ body.menu-open { overflow: hidden; }
    ============================================================ */
 .gallery {
   /* лента выходит за колонку текста на всю ширину экрана */
+  position: relative;
   width: 100vw;
   margin: 12px 0 44px calc(50% - 50vw);
   overflow: hidden;
   padding: 12px 0;
-  -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
-  mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+}
+
+/* Растушёвка краёв ленты. Раньше это была mask-image, но маска поверх
+   движущейся ленты заставляет телефон перерисовывать её каждый кадр —
+   вместо неё две обычные заливки цветом фона по краям */
+.gallery::before,
+.gallery::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 9%;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.gallery::before {
+  left: 0;
+  background: linear-gradient(90deg, var(--bg), transparent);
+}
+
+.gallery::after {
+  right: 0;
+  background: linear-gradient(270deg, var(--bg), transparent);
 }
 
 .gallery__track {
   display: flex;
   width: max-content;
+  /* translate3d в кадрах анимации сам уводит ленту на видеокарту.
+     will-change тут не ставим: лента шириной в пять экранов висела бы
+     в памяти телефона постоянно, а из-за этого iPhone и выбрасывает
+     из неё картинки, оставляя пустые рамки */
   animation: gallery-scroll 45s linear infinite;
 }
 
-.gallery:hover .gallery__track { animation-play-state: paused; }
-
 @keyframes gallery-scroll {
-  from { transform: translateX(0); }
-  to   { transform: translateX(-50%); }
+  from { transform: translate3d(0, 0, 0); }
+  to   { transform: translate3d(-50%, 0, 0); }
 }
 
 .gallery__img {
@@ -1351,7 +1383,12 @@ body.menu-open { overflow: hidden; }
   transition: transform 0.35s ease;
 }
 
-.gallery__img:hover { transform: scale(1.04) rotate(0.5deg); }
+/* Реакции на наведение — только там, где есть мышь. На телефоне :hover
+   «залипает» после тапа: лента вставала намертво до тапа по пустому месту */
+@media (hover: hover) {
+  .gallery:hover .gallery__track { animation-play-state: paused; }
+  .gallery__img:hover { transform: scale(1.04) rotate(0.5deg); }
+}
 
 /* ============================================================
    Лайтбокс
