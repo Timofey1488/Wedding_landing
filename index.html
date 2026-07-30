@@ -81,7 +81,9 @@
         <span class="hero__script" aria-hidden="true">Our wedding!</span>
       </div>
       <div class="hero__divider reveal" aria-hidden="true">
-        <span></span><i>♥</i><span></span>
+        <!-- &#xFE0E; — просим рисовать ♥ как обычный символ, а не как
+             цветной эмодзи (иначе на телефонах он краснеет) -->
+        <span></span><i>♥&#xFE0E;</i><span></span>
       </div>
       <p class="hero__date reveal" id="heroDate">19 сентября 2026</p>
     </div>
@@ -355,7 +357,7 @@
   <footer class="footer">
     <p class="footer__names">Алина <span class="footer__amp">&amp;</span> Тимофей</p>
     <p class="footer__date" id="footerDate">19.09.2026</p>
-    <p class="footer__note">Ждём вас с любовью <span class="footer__heart">♥</span></p>
+    <p class="footer__note">Ждём вас с любовью <span class="footer__heart">♥&#xFE0E;</span></p>
     <p class="footer__credit">Сайт создал Timofey Sidorenko</p>
   </footer>
 

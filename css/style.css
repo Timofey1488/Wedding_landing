@@ -410,6 +410,9 @@ body.menu-open { overflow: hidden; }
   font-style: normal;
   color: var(--blue-accent);
   font-size: 0.8rem;
+  /* без этого iOS и Android подставляют цветной эмодзи-шрифт
+     и сердечко получается красным вместо цвета из color */
+  font-variant-emoji: text;
 }
 
 .hero__date {
@@ -1061,6 +1064,8 @@ body.menu-open { overflow: hidden; }
   text-align: center;
   font-size: 0.92rem;
   color: var(--blue-accent);
+  /* в тексте ответа есть ♥ — держим его текстовым, не эмодзи */
+  font-variant-emoji: text;
 }
 
 /* после успешной отправки форма «застывает» */
@@ -1625,6 +1630,8 @@ body.menu-open { overflow: hidden; }
 .footer__heart {
   display: inline-block;
   animation: deco-beat 3.2s ease-in-out infinite;
+  /* см. .hero__divider i — держим сердечко текстовым, не эмодзи */
+  font-variant-emoji: text;
 }
 
 .footer__credit {
