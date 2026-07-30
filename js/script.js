@@ -1,6 +1,7 @@
 /* Всё содержимое берётся из js/config.js — правьте данные там */
 
 document.addEventListener("DOMContentLoaded", () => {
+  initHeroHeight();
   initLoader();
   fillTexts();
   initHandwriting();
@@ -15,6 +16,35 @@ document.addEventListener("DOMContentLoaded", () => {
   initLightbox();
   initParallax();
 });
+
+/* ---------- Высота обложки ---------- */
+
+function initHeroHeight() {
+  const root = document.documentElement;
+
+  // Обложка меряется от высоты окна. В обычном браузере для этого хватает
+  // единицы svh, но когда страницу открывают внутри приложения (Telegram
+  // и подобные), окно меняет высоту прямо во время прокрутки — и вместе
+  // с ним пересчитываются любые svh/dvh/vh, отчего фото прыгает.
+  // Поэтому снимаем высоту один раз в пикселях и дальше держимся за неё.
+  const measure = () => {
+    const vv = window.visualViewport;
+    const h = Math.round(vv ? vv.height : window.innerHeight);
+    root.style.setProperty("--hero-h", h + "px");
+  };
+
+  measure();
+
+  // Пересчитываем только когда меняется ширина, то есть при повороте
+  // экрана. Изменение одной высоты — это как раз то, от чего защищаемся
+  let lastWidth = window.innerWidth;
+
+  window.addEventListener("resize", () => {
+    if (window.innerWidth === lastWidth) return;
+    lastWidth = window.innerWidth;
+    measure();
+  });
+}
 
 /* ---------- Загрузочный экран ---------- */
 

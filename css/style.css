@@ -245,7 +245,11 @@ body.menu-open { overflow: hidden; }
    ============================================================ */
 .hero {
   position: relative;
-  min-height: 100svh;
+  /* --hero-h ставит js/script.js: пиксельная высота окна, снятая один
+     раз при открытии. Во встроенных окнах (Telegram) высота меняется
+     во время прокрутки, и svh пересчитывался бы на ходу.
+     100svh остаётся запасным значением, если скрипт не отработал */
+  min-height: var(--hero-h, 100svh);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -317,7 +321,7 @@ body.menu-open { overflow: hidden; }
   display: flex;
   flex-direction: column;
   justify-content: center;
-  max-height: 100svh;
+  max-height: var(--hero-h, 100svh);
   /* will-change здесь сознательно НЕ ставим. Он держал бы обложку
      отдельным слоем постоянно, а iOS Safari во время выезда своей
      панели с адресной строкой растягивает уже отрисованный слой вместо
@@ -338,13 +342,13 @@ body.menu-open { overflow: hidden; }
     animation: hero-parallax linear both;
     /* отсчёт от прокрутки страницы, на длине первого экрана */
     animation-timeline: scroll(root block);
-    animation-range: 0 100svh;
+    animation-range: 0 var(--hero-h, 100svh);
   }
 
   @keyframes hero-parallax {
     from { transform: translate3d(0, 0, 0); opacity: 1; }
     90%  { opacity: 0; }
-    to   { transform: translate3d(0, 28svh, 0); opacity: 0; }
+    to   { transform: translate3d(0, calc(var(--hero-h, 100svh) * 0.28), 0); opacity: 0; }
   }
 }
 
@@ -353,11 +357,11 @@ body.menu-open { overflow: hidden; }
   position: relative;
   width: min(420px, 86vw);
   margin: 46px auto 0;
-  /* svh, а не vh: на телефоне при прокрутке прячется адресная строка,
-     и высота окна меняется — вместе с ней прыгала бы и высота фото.
-     Единица svh считается от окна с раскрытой адресной строкой и при
-     её сворачивании не меняется, поэтому кадр остаётся неподвижным */
-  height: clamp(280px, 40svh, 400px);
+  /* Высота кадра — доля от --hero-h, а она снята в пикселях один раз
+     при открытии страницы. Так фото не меняет высоту ни когда в Safari
+     прячется адресная строка, ни когда встроенное окно Telegram
+     перестраивается по ходу прокрутки */
+  height: clamp(280px, calc(var(--hero-h, 100svh) * 0.4), 400px);
   /* Из всей колонки только фото умеет ужиматься: если обложка не влезает
      в экран, лишнее забирается отсюда, а не уезжает под сгиб.
      min-height не даёт кадру схлопнуться в полоску */
