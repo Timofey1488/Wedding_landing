@@ -388,6 +388,14 @@ function initParallax() {
   let running = false;
 
   function startJsParallax() {
+    // На тач-экранах этот путь не включаем. Прокруткой там занимается
+    // отдельный поток браузера, а мы считаем сдвиг на основном — он
+    // неизбежно отстаёт, и обложка дёргается (проверено на iOS Safari:
+    // ни покадровый цикл, ни поправка на адресную строку не спасают).
+    // Пусть лучше обложка стоит ровно. Там, где параллакс ведёт сам
+    // браузер (Chrome, Android), он работает и на тач-экране — см. выше
+    if (!window.matchMedia("(hover: hover)").matches) return;
+
     window.addEventListener("scroll", start, { passive: true });
     window.addEventListener("resize", () => {
       heroHeight = hero.offsetHeight;
