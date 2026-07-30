@@ -353,47 +353,98 @@ function initParallax() {
   // Свежие браузеры умеют привязывать анимацию к прокрутке сами
   // (см. @supports animation-timeline в css/style.css) — там обложку
   // двигает та же часть браузера, что и саму страницу, кадр в кадр.
-  // Отдаём работу ей и из JS не вмешиваемся
-  if (window.CSS && CSS.supports("animation-timeline: scroll()")) return;
+  // Если это работает, из JS не вмешиваемся.
+  //
+  // Спрашиваем не «знает ли браузер такое свойство», а «крутится ли
+  // анимация на самом деле»: Safari свойство знает, но прокрутку к нему
+  // не привязывает, и по одному CSS.supports обложка застыла бы совсем.
+  // Ждём кадр — до первой отрисовки анимация ещё не ожила
+  requestAnimationFrame(() => {
+    const cssDriven = content.getAnimations().some(
+      (a) =>
+        a.timeline &&
+        a.timeline !== document.timeline &&
+        a.effect &&
+        a.effect.getComputedTiming().progress !== null
+    );
 
-  // Без такой поддержки остаётся считать положение вручную, а JS на
-  // телефоне неизбежно отстаёт от прокрутки на кадр-другой. Пусть лучше
-  // обложка стоит ровно, чем дёргается: на тач-экранах параллакс выключаем
-  if (!window.matchMedia("(hover: hover)").matches) return;
-
-  // Высоту обложки меряем заранее: если читать её на каждом событии
-  // прокрутки, браузер вынужден пересчитывать раскладку прямо посреди
-  // скролла — на телефоне это и даёт рывки
-  let heroHeight = hero.offsetHeight;
-  let pending = false;
-
-  const update = () => {
-    pending = false;
-
-    const y = window.scrollY;
-    if (y > heroHeight) return;
-
-    // translate3d — чтобы обложку двигала видеокарта, а не перерисовка
-    content.style.transform = `translate3d(0, ${y * 0.28}px, 0)`;
-    content.style.opacity = 1 - y / (heroHeight * 0.9);
-  };
-
-  // На телефоне прокруткой занимается отдельный поток браузера, и события
-  // scroll приходят вразнобой. Поэтому не двигаем обложку на каждом
-  // событии, а откладываем до ближайшего кадра — так шаг всегда ровный
-  const onScroll = () => {
-    if (pending) return;
-    pending = true;
-    requestAnimationFrame(update);
-  };
-
-  window.addEventListener("scroll", onScroll, { passive: true });
-  window.addEventListener("resize", () => {
-    heroHeight = hero.offsetHeight;
-    onScroll();
+    if (!cssDriven) startJsParallax();
   });
 
-  update();
+  // Дальше — запасной путь для Safari и других браузеров без такой
+  // поддержки: положение обложки считает сам JS.
+  //
+  // Раньше мы обновляли её по событию scroll — в этом и была причина
+  // рывков: телефон присылает эти события реже, чем обновляет экран, и
+  // обложка прыгала через десяток пикселей. Поэтому пока идёт прокрутка,
+  // крутим свой цикл по кадрам и каждый кадр сами спрашиваем позицию —
+  // она всегда свежая, пропусков не остаётся.
+
+  // Высоту обложки меряем заранее: читать её в цикле — значит заставлять
+  // браузер пересчитывать раскладку посреди прокрутки
+  let heroHeight = hero.offsetHeight;
+  let lastY = -1;
+  let idleFrames = 0;
+  let running = false;
+
+  function startJsParallax() {
+    window.addEventListener("scroll", start, { passive: true });
+    window.addEventListener("resize", () => {
+      heroHeight = hero.offsetHeight;
+      lastY = -1;
+      start();
+    });
+
+    // Появление и исчезновение адресной строки — это отдельные события,
+    // события scroll при этом может и не быть. Иначе цикл спал бы ровно
+    // в тот момент, когда обложку и надо поправить
+    if (window.visualViewport) {
+      window.visualViewport.addEventListener("resize", start);
+      window.visualViewport.addEventListener("scroll", start);
+    }
+
+    start();
+  }
+
+  const frame = () => {
+    // Когда на телефоне при прокрутке вниз прячется адресная строка,
+    // видимая область съезжает относительно страницы: scrollY меняется
+    // не так, как то, что человек видит на экране, — и обложка дёргается.
+    // visualViewport.offsetTop как раз показывает этот разъезд, поэтому
+    // считаем сдвиг по тому, где обложка на самом деле оказалась
+    const vv = window.visualViewport;
+    const y = window.scrollY + (vv ? vv.offsetTop : 0);
+
+    if (y !== lastY) {
+      lastY = y;
+      idleFrames = 0;
+
+      if (y <= heroHeight) {
+        // translate3d — чтобы обложку двигала видеокарта, а не перерисовка
+        content.style.transform = `translate3d(0, ${y * 0.28}px, 0)`;
+        content.style.opacity = 1 - y / (heroHeight * 0.9);
+      }
+    } else {
+      idleFrames++;
+    }
+
+    // прокрутка замерла — гасим цикл, чтобы не жечь батарею впустую.
+    // Следующее событие scroll заведёт его снова
+    if (idleFrames > 30) {
+      running = false;
+      return;
+    }
+
+    requestAnimationFrame(frame);
+  };
+
+  const start = () => {
+    if (running) return;
+    running = true;
+    idleFrames = 0;
+    requestAnimationFrame(frame);
+  };
+
 }
 
 /* ---------- Навигация ---------- */
